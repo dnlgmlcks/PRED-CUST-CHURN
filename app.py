@@ -1,15 +1,32 @@
 # streamlit main page
+import joblib
 import streamlit as st
+import os
+
+# ----------------------------
+# 모델 로드
+# ----------------------------
+@st.cache_resource
+def load_model():
+    model = joblib.load("churn_model.pkl")
+    threshold = joblib.load("threshold.pkl")
+    return model, threshold
+
+model, threshold = load_model()
+
+st.write("현재 작업 폴더:", os.getcwd())
+st.write("현재 폴더 파일 목록:", os.listdir())
 
 # 페이지 정의
 entry_p = st.Page("pages/entry.py", title="홈", icon="🏠", default=True)
 churn_predictor_p = st.Page("pages/churn_predictor.py", title="고객이탈예측", icon="🔮")
 risk_watchlist_p = st.Page("pages/risk_watchlist.py", title="위험리스트", icon="🚨")
+test_p = st.Page("pages/test.py", title="test", icon="🦊")
 
 # 내비게이션 실행
 pg = st.navigation({
     "Project": [entry_p],
-    "Analysis Tools": [churn_predictor_p, risk_watchlist_p]
+    "Analysis Tools": [churn_predictor_p, risk_watchlist_p, test_p],
 })
 
 # 이전 페이지와 비교
